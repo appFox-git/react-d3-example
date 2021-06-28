@@ -1,8 +1,15 @@
 import React, { Component } from 'react';
-import { Navbar, Container } from 'react-bootstrap';
+import { Navbar, Container, Row, Col, Dropdown } from 'react-bootstrap';
 import ChartWrapper from './components/ChartWrapper';
+import GenderDropdown from './components/GenderDropdown';
 
 class App extends Component {
+  state = {
+    gender: 'men',
+  };
+
+  genderSelected = gender => this.setState({ gender });
+
   render() {
     return (
       <div className='App'>
@@ -10,7 +17,16 @@ class App extends Component {
           <Navbar.Brand>ReactD3</Navbar.Brand>
         </Navbar>
         <Container>
-          <ChartWrapper />
+          <Row>
+            <Col xs={12}>
+              <GenderDropdown genderSelected={this.genderSelected} />
+            </Col>
+          </Row>
+          <Row>
+            <Col xs={12}>
+              <ChartWrapper gender={this.state.gender} />
+            </Col>
+          </Row>
         </Container>
       </div>
     );

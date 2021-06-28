@@ -18,12 +18,12 @@ export default class D3Chart {
       .append('g')
       .attr('transform', `translate(${MARGIN.LEFT}, ${MARGIN.TOP})`);
 
-    vis.svg
+    vis.xLabel = vis.svg
       .append('text')
       .attr('x', WIDTH / 2)
       .attr('y', HEIGHT + 50)
       .attr('text-anchor', 'middle')
-      .text("The World's Tallest Men");
+      .text("The World's Tallest ");
 
     vis.svg
       .append('text')
@@ -40,23 +40,17 @@ export default class D3Chart {
     vis.yAxisGroup = vis.svg.append('g');
 
     Promise.all([d3.json(url), d3.json(url2)]).then(datasets => {
-      const [men, women] = datasets;
-      let flag = true;
-
-      // set data to men for initial display, otherwise chart will be blank for 1st one second increment of the d3.interval() call.
-      vis.data = men;
-      vis.update();
-
-      d3.interval(() => {
-        vis.data = flag ? men : women;
-        vis.update();
-        flag = !flag;
-      }, 1000);
+      vis.menData = datasets[0];
+      vis.womenData = datasets[1];
+      vis.update('men');
     });
   }
 
-  update() {
+  update(gender) {
     const vis = this;
+
+    vis.data = gender == 'men' ? vis.menData : vis.womenData;
+    vis.xLabel.text(`The World's Tallest ${gender}`);
 
     const y = d3
       .scaleLinear()
